@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+}
+
+.navbar-left {
+  height: 100vh;
+  width: 20%;
+  background-color: #3fc0f0;
+  border-right: 5px solid darkblue;
+}
+
+.logo {
+  width: 22rem;
+}
+
+.nav-links {
+  list-style: none;
+  font-size: 2rem;
+}
+
+.navlink {
+  padding-top: 20%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  cursor: pointer;
+}
+
+.navlink-active {
+  color: darkblue;
+}
+
+.content-right {
+  width: 80%;
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: block;
+    width: 100vw;
+  }
+  .navbar-left {
+    height: 15vh;
+    width: 100%;
+  }
+  .content-right {
+    width: 100vw;
+  }
+}
