@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import campaignModel from "../campaignModel";
-import validateNewCampaign from "../validateNewCampaign";
 import {
+  Space,
+  Table,
+  Tag,
   Button,
   Modal,
   DatePicker,
@@ -12,8 +13,9 @@ import {
   Select,
 } from "antd";
 
-const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
-  // const [campaign, setCampaign] = useState({ ...campaignModel });
+const EditCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
+  const [campaignIndex, setCampaignIndex] = useState(null);
+  const [updatedCampaign, setUpdatedCampaign] = useState(null);
   const [campaignName, setCampaignName] = useState(null);
   const [campaignType, setCampaignType] = useState(null);
   const [startDate, setStartDate] = useState(null);
@@ -25,7 +27,7 @@ const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
   };
   const handleOk = () => {
     setConfirmLoading(true);
-    console.log("Campaign data:", newCampaign);
+    // console.log("Campaign data:", newCampaign);
     const updatedCampaigns = [...existingCampaigns, newCampaign];
     setStoredCampaigns(updatedCampaigns);
     localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
@@ -39,7 +41,7 @@ const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
     setOpen(false);
   };
 
-  const newCampaign = {
+  const updatedCampaignData = {
     campaign_name: campaignName,
     campaign_type: Number(campaignType),
     campaign_start_time: new Date(startDate).toLocaleDateString("de-DE", {
@@ -55,23 +57,25 @@ const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
     campaign_status_id: 1,
   };
 
-  if (validateNewCampaign(newCampaign)) {
-    // Add newCampaign to your campaign list
-  } else {
-    // Display an error message or handle invalid data
-  }
-  const handleSubmit = () => {
-    // Storing campaign data in LocalStorage
-    // localStorage.setItem("campaigns", JSON.stringify(campaignData));
-    // Retrieving campaign data from LocalStorage
-    // const storedCampaigns = JSON.parse(localStorage.getItem("campaigns"));
+  const editCampaign = (campaignIndex, updatedCampaignData) => {
+    const updatedCampaigns = [...storedCampaigns];
+    updatedCampaigns[campaignIndex] = updatedCampaignData;
+    setStoredCampaigns(updatedCampaigns);
+    localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
+  };
+
+  // Function to delete a campaign
+  const deleteCampaign = (campaignIndex) => {
+    const updatedCampaigns = storedCampaigns.filter(
+      (_, index) => index !== campaignIndex
+    );
+    setStoredCampaigns(updatedCampaigns);
+    localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
   };
 
   return (
     <>
-      <Button type="primary" size="large" onClick={showModal}>
-        Create campaign
-      </Button>
+      <Button type="link">Edit</Button>
       <Modal
         title="Create a new campaign"
         open={open}
@@ -142,4 +146,4 @@ const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
   );
 };
 
-export default CreateCampaign;
+export default EditCampaign;
