@@ -22,7 +22,7 @@ body {
 
 .nav-links {
   list-style: none;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .navlink {
@@ -41,6 +41,40 @@ body {
   height: 100vh;
 }
 
+.create-button {
+  margin: 2%;
+  display: flex;
+}
+
+.filter {
+  margin: 2%;
+}
+
+.filter-form {
+  display: flex;
+}
+
+.filter-search {
+  width: 20%;
+}
+
+.filter-type {
+  width: 15%;
+}
+
+.table {
+  margin: 2%;
+}
+
+.button-delete {
+  background-color: rgba(255, 0, 0, 0.664);
+  color: white;
+}
+.button-activate {
+  background-color: green;
+  color: white;
+}
+
 @media (max-width: 768px) {
   .container {
     display: block;
@@ -49,6 +83,12 @@ body {
   .navbar-left {
     height: 15vh;
     width: 100%;
+  }
+  .nav-links {
+    display: none;
+  }
+  .logo {
+    width: 10rem;
   }
   .content-right {
     width: 100vw;

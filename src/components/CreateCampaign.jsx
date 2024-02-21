@@ -12,30 +12,33 @@ import {
   Select,
 } from "antd";
 
-const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
+const CreateCampaign = ({
+  existingCampaigns,
+  setStoredCampaigns,
+  open,
+  setOpen,
+  editToggle,
+  setEditToggle,
+  currentCampaign,
+}) => {
   // const [campaign, setCampaign] = useState({ ...campaignModel });
   const [campaignName, setCampaignName] = useState(null);
   const [campaignType, setCampaignType] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleOk = () => {
-    setConfirmLoading(true);
-    console.log("Campaign data:", newCampaign);
-    const updatedCampaigns = [...existingCampaigns, newCampaign];
-    setStoredCampaigns(updatedCampaigns);
-    localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
+  // const showModal = () => {
+  //   setOpen(true);
+  // };
+
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    // console.log("Clicked cancel button");
+    setCampaignName("");
+    setCampaignType("");
+    setStartDate("");
+    setEndDate("");
+    setEditToggle(false);
     setOpen(false);
   };
 
@@ -55,27 +58,55 @@ const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
     campaign_status_id: 1,
   };
 
-  if (validateNewCampaign(newCampaign)) {
-    // Add newCampaign to your campaign list
-  } else {
-    // Display an error message or handle invalid data
-  }
   const handleSubmit = () => {
-    // Storing campaign data in LocalStorage
-    // localStorage.setItem("campaigns", JSON.stringify(campaignData));
-    // Retrieving campaign data from LocalStorage
-    // const storedCampaigns = JSON.parse(localStorage.getItem("campaigns"));
+    if (validateNewCampaign(newCampaign).isValid) {
+      if (editToggle) {
+        setConfirmLoading(true);
+        // console.log("EDITED Campaign data:", newCampaign);
+        const updatedCampaigns = [...existingCampaigns];
+        updatedCampaigns[currentCampaign.key] = newCampaign;
+        console.log(updatedCampaigns);
+        setStoredCampaigns(updatedCampaigns);
+        localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
+        setCampaignName("");
+        setCampaignType("");
+        setStartDate("");
+        setEndDate("");
+        return setTimeout(() => {
+          setEditToggle(false);
+
+          setOpen(false);
+          setConfirmLoading(false);
+        }, 2000);
+      } else {
+        setConfirmLoading(true);
+        console.log("Campaign data:", newCampaign);
+        const updatedCampaigns = [...existingCampaigns, newCampaign];
+        setStoredCampaigns(updatedCampaigns);
+        localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
+        setCampaignName("");
+        setCampaignType("");
+        setStartDate("");
+        setEndDate("");
+        setTimeout(() => {
+          setOpen(false);
+          setConfirmLoading(false);
+        }, 2000);
+      }
+    } else {
+      alert(validateNewCampaign(newCampaign).message);
+    }
   };
 
   return (
     <>
-      <Button type="primary" size="large" onClick={showModal}>
+      {/* <Button type="primary" size="large" onClick={showModal}>
         Create campaign
-      </Button>
+      </Button> */}
       <Modal
-        title="Create a new campaign"
+        title={editToggle ? "Edit campaign" : "Create a new campaign"}
         open={open}
-        onOk={handleOk}
+        onOk={handleSubmit}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
@@ -94,6 +125,7 @@ const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
               type="text"
               onChange={(e) => setCampaignName(e.target.value)}
               value={campaignName}
+              placeholder="Enter campaign name"
             />
           </Form.Item>
           <Form.Item
@@ -106,7 +138,11 @@ const CreateCampaign = ({ existingCampaigns, setStoredCampaigns }) => {
               },
             ]}
           >
-            <Select onChange={setCampaignType} value={campaignType}>
+            <Select
+              onChange={setCampaignType}
+              value={campaignType}
+              placeholder="Select campaign type"
+            >
               <Select.Option value="1">Standard</Select.Option>
               <Select.Option value="2">AB-Test</Select.Option>
               <Select.Option value="3">MV-Test</Select.Option>
