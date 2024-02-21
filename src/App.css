@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: Montserrat;
 }
 
 .container {
@@ -23,11 +24,12 @@ body {
 .nav-links {
   list-style: none;
   font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .navlink {
   padding-top: 20%;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
   color: white;
   cursor: pointer;
 }
@@ -42,28 +44,36 @@ body {
 }
 
 .create-button {
-  margin: 2%;
+  margin: 4%;
   display: flex;
+  height: 3rem;
+
+  font-weight: 700;
+  font-size: 1.2rem;
 }
 
 .filter {
-  margin: 2%;
+  margin: 4%;
+  font-size: 1.3rem;
 }
 
 .filter-form {
   display: flex;
+
+  width: 60%;
+  justify-content: space-around;
 }
 
 .filter-search {
   width: 20%;
 }
-
 .filter-type {
-  width: 15%;
+  min-width: 20%;
 }
 
 .table {
-  margin: 2%;
+  margin: 4%;
+  font-size: 1.3rem;
 }
 
 .button-delete {
@@ -92,5 +102,41 @@ body {
   }
   .content-right {
     width: 100vw;
+    margin-left: 3%;
+  }
+  .create-button,
+  .filter,
+  .table {
+    margin-top: 8%;
+  }
+
+  .filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .filter-form {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    justify-content: space-around;
+  }
+  .filter-search {
+    width: 96%;
+  }
+
+  .search-logo {
+    display: none;
+  }
+
+  .filter-search,
+  .filter-type,
+  .filter-date,
+  .filter-button {
+    margin: 2%;
+  }
+  .actions-buttons {
+    display: flex;
+    flex-direction: column;
   }
 }

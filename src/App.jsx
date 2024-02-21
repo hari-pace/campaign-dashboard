@@ -3,6 +3,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import CampaignTable from "./components/CampaignTable";
 import CreateCampaign from "./components/CreateCampaign";
+import initialCampaigns from "./seedData";
 import { Button } from "antd";
 
 function App() {
@@ -18,6 +19,11 @@ function App() {
     const localStorageData = localStorage.getItem("campaigns");
     if (localStorageData) {
       setStoredCampaigns(JSON.parse(localStorageData));
+    }
+    // If no data exists, seed the initial data
+    if (!localStorageData) {
+      localStorage.setItem("campaigns", JSON.stringify(initialCampaigns));
+      setStoredCampaigns(JSON.parse(initialCampaigns));
     }
   }, []);
 

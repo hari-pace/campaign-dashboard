@@ -8,6 +8,9 @@ import {
   Radio,
   Select,
   DatePicker,
+  message,
+  Spin,
+  Tooltip,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "../App.css";
@@ -29,6 +32,7 @@ const CampaignTable = ({
   const [statusActive, setStatusActive] = useState(true);
   const [sortOrder, setSortOrder] = useState(null);
   const [sortColumn, setSortColumn] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     name: "",
     type: null,
@@ -41,9 +45,25 @@ const CampaignTable = ({
     setEditToggle(true);
     showModal();
   };
-  const changeCampaignStatus = (record) => {
-    console.log(record.status);
-    setCurrentCampaign(record);
+
+  const handleStatusToggle = (record) => {
+    setLoading(true);
+    const updatedCampaigns = existingCampaigns.map((campaign, i) => {
+      if (i === record.key) {
+        return {
+          ...campaign,
+          campaign_status_id: campaign.campaign_status_id === 1 ? 0 : 1,
+        };
+      }
+      setTimeout(() => {
+        setLoading(false);
+        message.success("Status updated successfully.");
+      }, 2000);
+      return campaign;
+    });
+
+    setStoredCampaigns(updatedCampaigns);
+    localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
   };
 
   const handleColumnSort = (columnKey) => {
@@ -114,45 +134,53 @@ const CampaignTable = ({
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <Space size="middle">
-          {/* <EditCampaign
-            existingCampaigns={existingCampaigns}
-            setStoredCampaigns={setStoredCampaigns}
-          /> */}
-          <Button type="link" onClick={() => editButtonClick(record)}>
-            Edit
-          </Button>
-          <Button
-            type="link"
-            onClick={() => changeCampaignStatus(record)}
-            className={
-              record.status === "Active" ? "button-delete" : "button-activate"
-            }
+        <Space size="middle" className="actions-buttons">
+          <Tooltip
+            title="Click here to edit the campaign
+            "
           >
-            {record.status === "Active" ? "Delete" : "Activate"}
-          </Button>
+            <Button type="link" onClick={() => editButtonClick(record)}>
+              Edit
+            </Button>
+          </Tooltip>
+          <Tooltip
+            title={`Click here to change the status to ${
+              record.status === "Active" ? "deleted" : "activated"
+            }`}
+          >
+            <Button
+              type="link"
+              onClick={() => handleStatusToggle(record)}
+              className={
+                record.status === "Active" ? "button-delete" : "button-activate"
+              }
+            >
+              {record.status === "Active" ? "Delete" : "Activate"}
+            </Button>
+          </Tooltip>
         </Space>
       ),
     },
   ];
 
-  const filteredCampaignsByName = existingCampaigns?.filter(
-    (campaign) =>
-      campaign.campaign_name?.includes(searchValueName) ||
-      campaign.campaign_name?.includes(
-        searchValueName?.charAt(0).toUpperCase() + searchValueName?.slice(1)
-      ) ||
-      campaign.campaign_name?.includes(
-        searchValueName?.charAt(0).toLowerCase() + searchValueName?.slice(1)
-      )
-  );
+  // console.log(new Date("11.2.2024"));
+
+  // const filteredCampaignsByType = existingCampaigns?.filter(
+  //   (campaign) =>
+  //     campaign.campaign_type?.includes(searchValueName) ||
+  //     campaign.campaign_name?.includes(
+  //       searchValueName?.charAt(0).toUpperCase() + searchValueName?.slice(1)
+  //     ) ||
+  //     campaign.campaign_name?.includes(
+  //       searchValueName?.charAt(0).toLowerCase() + searchValueName?.slice(1)
+  //     )
+  // );
 
   const handleNameChange = (e) => {
     setFilters({ ...filters, name: e.target.value });
   };
 
   const handleTypeChange = (e) => {
-    console.log(e);
     setFilters({ ...filters, type: e });
   };
 
@@ -178,12 +206,14 @@ const CampaignTable = ({
     const nameMatch = campaign.campaign_name
       .toLowerCase()
       .includes(filters.name.toLowerCase());
+
     const typeMatch = filters.type
-      ? campaign?.campaign_type === filters.type
+      ? campaign.campaign_type === filters.type
       : true;
+
     const startDateMatch =
       !filters.startDate ||
-      campaign.campaign_start_time ===
+      campaign.campaign_start_time >=
         new Date(filters.startDate).toLocaleDateString("de-DE", {
           day: "numeric",
           month: "numeric",
@@ -191,7 +221,7 @@ const CampaignTable = ({
         });
     const endDateMatch =
       !filters.endDate ||
-      campaign.campaign_end_time ===
+      campaign.campaign_end_time <=
         new Date(filters.endDate).toLocaleDateString("de-DE", {
           day: "numeric",
           month: "numeric",
@@ -206,7 +236,7 @@ const CampaignTable = ({
         {" "}
         <h2>Filter campaigns</h2>
         <div className="filter-form">
-          <SearchOutlined />
+          <SearchOutlined className="search-logo" />
           <Input
             className="filter-search"
             type="text"
@@ -227,46 +257,56 @@ const CampaignTable = ({
             <Select.Option value="2">AB-Test</Select.Option>
             <Select.Option value="3">MV-Test</Select.Option>
           </Select>
+
           <DatePicker
+            className="filter-date"
             placeholder="Select start date"
             onChange={handleStartDateChange}
             value={filters.startDate}
           />
           <DatePicker
+            className="filter-date"
             placeholder="Select end date"
             onChange={handleEndDateChange}
             value={filters.endDate}
           />
-          <Button type="primary" onClick={clearFilters}>
+
+          <Button
+            type="primary"
+            className="filter-button"
+            onClick={clearFilters}
+          >
             Clear filters
           </Button>
         </div>
       </div>
       <div className="table">
         <h2>Campaigns</h2>
-        <Table
-          columns={columns}
-          dataSource={filteredCampaigns?.map((campaign, index) => ({
-            key: index,
-            name: campaign.campaign_name,
-            type:
-              campaign.campaign_type === 1
-                ? "Standard"
-                : campaign.campaign_type === 2
-                ? "AB-Test"
-                : campaign.campaign_type === 3
-                ? "MV-Test"
-                : "",
-            startDate: campaign.campaign_start_time,
-            endDate: campaign.campaign_end_time,
-            status:
-              campaign.campaign_status_id === 1
-                ? "Active"
-                : campaign.campaign_status_id === 0
-                ? "Deleted"
-                : "",
-          }))}
-        />
+        <Spin spinning={loading} tip="Loading...">
+          <Table
+            columns={columns}
+            dataSource={filteredCampaigns?.map((campaign, index) => ({
+              key: index,
+              name: campaign.campaign_name,
+              type:
+                campaign.campaign_type === 1
+                  ? "Standard"
+                  : campaign.campaign_type === 2
+                  ? "AB-Test"
+                  : campaign.campaign_type === 3
+                  ? "MV-Test"
+                  : "",
+              startDate: campaign.campaign_start_time,
+              endDate: campaign.campaign_end_time,
+              status:
+                campaign.campaign_status_id === 1
+                  ? "Active"
+                  : campaign.campaign_status_id === 0
+                  ? "Deleted"
+                  : "",
+            }))}
+          />
+        </Spin>
       </div>
     </>
   );
