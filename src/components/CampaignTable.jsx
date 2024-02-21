@@ -12,7 +12,12 @@ import {
   Spin,
   Tooltip,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+  CheckCircleOutlined,
+} from "@ant-design/icons";
 import "../App.css";
 
 const CampaignTable = ({
@@ -89,6 +94,9 @@ const CampaignTable = ({
       onHeaderCell: () => ({
         onClick: () => handleColumnSort("name"),
       }),
+      render: (_, record) => (
+        <div className="campaign-names">{record.name}</div>
+      ),
     },
     {
       title: "Type",
@@ -155,7 +163,15 @@ const CampaignTable = ({
                 record.status === "Active" ? "button-delete" : "button-activate"
               }
             >
-              {record.status === "Active" ? "Delete" : "Activate"}
+              {record.status === "Active" ? (
+                <>
+                  <DeleteOutlined /> Delete
+                </>
+              ) : (
+                <>
+                  <CheckCircleOutlined /> Activate
+                </>
+              )}
             </Button>
           </Tooltip>
         </Space>
@@ -181,6 +197,7 @@ const CampaignTable = ({
   };
 
   const handleTypeChange = (e) => {
+    console.log(e);
     setFilters({ ...filters, type: e });
   };
 
@@ -189,7 +206,7 @@ const CampaignTable = ({
   };
 
   const handleEndDateChange = (date) => {
-    console.log(date);
+    // console.log(date);
     setFilters({ ...filters, endDate: date });
   };
 
@@ -207,26 +224,15 @@ const CampaignTable = ({
       .toLowerCase()
       .includes(filters.name.toLowerCase());
 
-    const typeMatch = filters.type
-      ? campaign.campaign_type === filters.type
-      : true;
+    const typeMatch = !filters.type || campaign.campaign_type == filters.type;
+    console.log(typeMatch);
 
     const startDateMatch =
       !filters.startDate ||
-      campaign.campaign_start_time >=
-        new Date(filters.startDate).toLocaleDateString("de-DE", {
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-        });
+      new Date(campaign.campaign_start_time) >= new Date(filters.startDate);
     const endDateMatch =
       !filters.endDate ||
-      campaign.campaign_end_time <=
-        new Date(filters.endDate).toLocaleDateString("de-DE", {
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-        });
+      new Date(campaign.campaign_end_time) <= new Date(filters.endDate);
     return nameMatch && typeMatch && startDateMatch && endDateMatch;
   });
 
@@ -260,13 +266,13 @@ const CampaignTable = ({
 
           <DatePicker
             className="filter-date"
-            placeholder="Select start date"
+            placeholder="Starting from"
             onChange={handleStartDateChange}
             value={filters.startDate}
           />
           <DatePicker
             className="filter-date"
-            placeholder="Select end date"
+            placeholder="Ending by"
             onChange={handleEndDateChange}
             value={filters.endDate}
           />
@@ -281,9 +287,17 @@ const CampaignTable = ({
         </div>
       </div>
       <div className="table">
-        <h2>Campaigns</h2>
+        <div className="campaign-bar">
+          <h2>Campaigns</h2>
+          <Button className="create-button" type="primary" onClick={showModal}>
+            <PlusOutlined />
+            Create campaign
+          </Button>
+        </div>
+
         <Spin spinning={loading} tip="Loading...">
           <Table
+            pagination={{ pageSize: 7 }}
             columns={columns}
             dataSource={filteredCampaigns?.map((campaign, index) => ({
               key: index,
@@ -296,8 +310,21 @@ const CampaignTable = ({
                   : campaign.campaign_type === 3
                   ? "MV-Test"
                   : "",
-              startDate: campaign.campaign_start_time,
-              endDate: campaign.campaign_end_time,
+              startDate: new Date(
+                campaign.campaign_start_time
+              ).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }),
+              endDate: new Date(campaign.campaign_end_time).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                }
+              ),
               status:
                 campaign.campaign_status_id === 1
                   ? "Active"

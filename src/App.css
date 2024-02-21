@@ -44,17 +44,20 @@ body {
 }
 
 .create-button {
-  margin: 4%;
-  display: flex;
-  height: 3rem;
-
-  font-weight: 700;
-  font-size: 1.2rem;
+  margin-left: 3%;
 }
 
 .filter {
-  margin: 4%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  margin-left: 4%;
+  margin-right: 4%;
+  padding-top: 0.5%;
+  padding-bottom: 2%;
+  padding-left: 2%;
   font-size: 1.3rem;
+  background-color: #fafafa;
+  border-radius: 20px 0;
 }
 
 .filter-form {
@@ -71,9 +74,22 @@ body {
   min-width: 20%;
 }
 
+.campaign-bar {
+  display: flex;
+  align-items: center;
+}
+
 .table {
-  margin: 4%;
+  margin-left: 4%;
+  margin-right: 4%;
   font-size: 1.3rem;
+}
+.table h2 {
+  padding-left: 2%;
+}
+
+.campaign-names {
+  font-weight: 700;
 }
 
 .button-delete {
@@ -83,6 +99,16 @@ body {
 .button-activate {
   background-color: green;
   color: white;
+}
+
+.ant-modal-title:where(.css-dev-only-do-not-override-1xg9z9n).ant-modal
+  .ant-modal-title {
+  font-size: 1.5em;
+  margin-bottom: 5%;
+}
+:where(.css-dev-only-do-not-override-1xg9z9n).ant-modal .ant-modal-title {
+  font-size: 1.5em;
+  margin-bottom: 5%;
 }
 
 @media (max-width: 768px) {
@@ -102,7 +128,6 @@ body {
   }
   .content-right {
     width: 100vw;
-    margin-left: 3%;
   }
   .create-button,
   .filter,
@@ -138,5 +163,78 @@ body {
   .actions-buttons {
     display: flex;
     flex-direction: column;
+  }
+  .table h2 {
+    text-align: center;
+  }
+}
+@media (min-width: 770px) and (max-width: 1030px) {
+  .container {
+    display: block;
+    width: 100vw;
+  }
+  .navbar-left {
+    height: 15vh;
+    width: 100%;
+  }
+  .nav-links {
+    display: none;
+  }
+  .logo {
+    width: 20rem;
+  }
+  .content-right {
+    width: 100vw;
+  }
+  .create-button,
+  .filter,
+  .table {
+    margin-top: 8%;
+  }
+
+  .filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.8rem;
+  }
+  .filter-form {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    justify-content: space-around;
+  }
+  .filter-search {
+    width: 96%;
+  }
+
+  .search-logo {
+    display: none;
+  }
+
+  .filter-search,
+  .filter-type,
+  .filter-date,
+  .filter-button {
+    margin: 2%;
+  }
+  .actions-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  .table h2 {
+    text-align: center;
+  }
+  .create-button {
+    margin-left: 4%;
+    margin-top: 3%;
+    display: flex;
+    height: 4rem;
+
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+  .table {
+    font-size: 1.8rem;
   }
 }

@@ -45,16 +45,8 @@ const CreateCampaign = ({
   const newCampaign = {
     campaign_name: campaignName,
     campaign_type: Number(campaignType),
-    campaign_start_time: new Date(startDate).toLocaleDateString("de-DE", {
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-    }),
-    campaign_end_time: new Date(endDate).toLocaleDateString("de-DE", {
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-    }),
+    campaign_start_time: startDate,
+    campaign_end_time: endDate,
     campaign_status_id: 1,
   };
 
@@ -109,6 +101,7 @@ const CreateCampaign = ({
         onOk={handleSubmit}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        className="modal"
       >
         <Form onFinish={handleSubmit}>
           <Form.Item

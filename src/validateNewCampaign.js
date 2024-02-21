@@ -40,7 +40,7 @@ const validateNewCampaign = (campaignData) => {
   if (
     campaign_start_time &&
     campaign_end_time &&
-    campaign_end_time <= campaign_start_time
+    new Date(campaign_end_time) <= new Date(campaign_start_time)
   ) {
     return {
       isValid: false,

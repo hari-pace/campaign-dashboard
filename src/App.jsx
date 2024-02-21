@@ -40,14 +40,7 @@ function App() {
         <div className="content-right">
           {/* Filter campaigns form */}
           {/* Create campaign button */}
-          <Button
-            className="create-button"
-            type="primary"
-            size="large"
-            onClick={showModal}
-          >
-            Create campaign
-          </Button>
+
           <CreateCampaign
             existingCampaigns={existingCampaigns}
             setStoredCampaigns={setStoredCampaigns}

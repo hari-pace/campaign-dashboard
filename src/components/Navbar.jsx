@@ -10,6 +10,7 @@ const Navbar = () => {
       <ul className="nav-links">
         <li className="navlink navlink-active">Campaign Dashboard</li>
         <li className="navlink">Customer Account</li>
+        <li className="navlink">Reports</li>
         <li className="navlink">Contact Trbo</li>
       </ul>
     </div>
