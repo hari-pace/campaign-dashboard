@@ -36,6 +36,7 @@ const CampaignTable = ({
     type: null,
     startDate: null,
     endDate: null,
+    status: null,
   });
 
   // Filter form
@@ -55,6 +56,9 @@ const CampaignTable = ({
   const handleEndDateChange = (date) => {
     setFilters({ ...filters, endDate: date });
   };
+  const handleStatusChange = (e) => {
+    setFilters({ ...filters, status: e });
+  };
 
   const clearFilters = () => {
     setFilters({
@@ -62,6 +66,7 @@ const CampaignTable = ({
       type: null,
       startDate: null,
       endDate: null,
+      status: null,
     });
   };
 
@@ -77,7 +82,11 @@ const CampaignTable = ({
     const endDateMatch =
       !filters.endDate ||
       new Date(campaign.campaign_end_time) <= new Date(filters.endDate);
-    return nameMatch && typeMatch && startDateMatch && endDateMatch;
+    const statusMatch =
+      !filters.status || campaign.campaign_status_id == filters.status;
+    return (
+      nameMatch && typeMatch && startDateMatch && endDateMatch && statusMatch
+    );
   });
 
   // Table columns setup
@@ -257,6 +266,16 @@ const CampaignTable = ({
             onChange={handleEndDateChange}
             value={filters.endDate}
           />
+
+          <Select
+            className="filter-type"
+            onChange={(e) => handleStatusChange(e)}
+            value={filters.status}
+            placeholder="Select campaign status"
+          >
+            <Select.Option value="0">Deleted</Select.Option>
+            <Select.Option value="1">Active</Select.Option>
+          </Select>
 
           <Button
             type="primary"
