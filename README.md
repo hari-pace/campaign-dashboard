@@ -14,3 +14,7 @@ The goal of the project was to create a frontend for a campaign dashboard that a
 - sort campaigns by name, type, start date, end date or status
 
 Using no backend, all data is stored in the user's local storage.
+
+## Deployment
+
+This application is deployed using Netlify and can be accessed [here](https://trbo-campaign-dashboard.netlify.app/).
