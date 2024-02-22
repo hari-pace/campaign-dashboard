@@ -1,9 +1,16 @@
-# React + Vite
+# Campaign Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple campaign dashboard built using React and Ant Design.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# campaign-dashboard
+The goal of the project was to create a frontend for a campaign dashboard that allows users to:
+
+- view campaigns
+- create a new campaign
+- edit an existing campaign
+- amend the status of a campaign between active and deleted
+- filter campaigns by name, type, start date or end date
+- sort campaigns by name, type, start date, end date or status
+
+Using no backend, all data is stored in the user's local storage.

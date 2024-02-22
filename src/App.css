@@ -23,8 +23,9 @@ body {
 
 .nav-links {
   list-style: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
+  margin-left: 5%;
 }
 
 .navlink {
@@ -129,10 +130,13 @@ body {
   .content-right {
     width: 100vw;
   }
-  .create-button,
+
   .filter,
   .table {
     margin-top: 8%;
+  }
+  .create-button {
+    margin-left: 10%;
   }
 
   .filter {
@@ -164,17 +168,14 @@ body {
     display: flex;
     flex-direction: column;
   }
-  .table h2 {
-    text-align: center;
-  }
 }
-@media (min-width: 770px) and (max-width: 1030px) {
+@media (min-width: 770px) and (max-width: 1740px) {
   .container {
     display: block;
     width: 100vw;
   }
   .navbar-left {
-    height: 15vh;
+    height: 25vh;
     width: 100%;
   }
   .nav-links {
@@ -222,17 +223,11 @@ body {
     display: flex;
     flex-direction: column;
   }
-  .table h2 {
-    text-align: center;
-  }
+
   .create-button {
     margin-left: 4%;
-    margin-top: 3%;
-    display: flex;
-    height: 4rem;
-
-    font-weight: 700;
-    font-size: 1.8rem;
+    margin-top: 0%;
+    height: 2.5rem;
   }
   .table {
     font-size: 1.8rem;

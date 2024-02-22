@@ -3,44 +3,38 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import CampaignTable from "./components/CampaignTable";
 import CreateCampaign from "./components/CreateCampaign";
-import initialCampaigns from "./seedData";
-import { Button } from "antd";
+import initialCampaigns from "./utils/seedData";
 
 function App() {
   const [storedCampaigns, setStoredCampaigns] = useState([]);
   const [open, setOpen] = useState(false);
   const [editToggle, setEditToggle] = useState(false);
   const [currentCampaign, setCurrentCampaign] = useState(null);
-  const showModal = () => {
-    setOpen(true);
-  };
 
   useEffect(() => {
     const localStorageData = localStorage.getItem("campaigns");
     if (localStorageData) {
       setStoredCampaigns(JSON.parse(localStorageData));
     }
-    // If no data exists, seed the initial data
+    // If there's no data in local storage, seed some initial data so the table isn't empty
     if (!localStorageData) {
       localStorage.setItem("campaigns", JSON.stringify(initialCampaigns));
       setStoredCampaigns(JSON.parse(initialCampaigns));
     }
   }, []);
 
-  // Define existingCampaigns based on storedCampaigns
   const existingCampaigns = storedCampaigns ? storedCampaigns : [];
 
-  console.log(existingCampaigns);
-  // localStorage.removeItem("campaigns");
+  const showModal = () => {
+    setOpen(true);
+  };
 
   return (
     <>
       <div className="container">
         <Navbar />
         <div className="content-right">
-          {/* Filter campaigns form */}
-          {/* Create campaign button */}
-
+          {/* Modal form */}
           <CreateCampaign
             existingCampaigns={existingCampaigns}
             setStoredCampaigns={setStoredCampaigns}

@@ -5,7 +5,7 @@ const validateNewCampaign = (campaignData) => {
 
   for (const key in campaignData) {
     const value = campaignData[key];
-    const { type, maxLength, allowedValues } = campaignModel[key];
+    const { type, maxLength } = campaignModel[key];
 
     if (type === "string" && typeof value !== "string") {
       return {
@@ -13,7 +13,7 @@ const validateNewCampaign = (campaignData) => {
         message: `Campaign name must be a string.`,
       };
     }
-    if (type === "string" && value.length <= 1) {
+    if (type === "string" && value.length < 1) {
       return {
         isValid: false,
         message: `Please enter a campaign name.`,
@@ -26,15 +26,6 @@ const validateNewCampaign = (campaignData) => {
         message: `Campaign name exceeds maximum length of ${maxLength}.`,
       };
     }
-
-    // if (type === "number" && allowedValues && !allowedValues.includes(value)) {
-    //   return {
-    //     isValid: false,
-    //     message: `${key} must be one of the allowed values: ${allowedValues.join(
-    //       ", "
-    //     )}.`,
-    //   };
-    // }
   }
 
   if (

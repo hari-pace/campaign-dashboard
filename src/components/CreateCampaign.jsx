@@ -1,16 +1,6 @@
 import React, { useState } from "react";
-import campaignModel from "../campaignModel";
-import validateNewCampaign from "../validateNewCampaign";
-import {
-  Button,
-  Modal,
-  DatePicker,
-  TimePicker,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-} from "antd";
+import validateNewCampaign from "../utils/validateNewCampaign";
+import { Modal, DatePicker, Form, Input, Select, message } from "antd";
 
 const CreateCampaign = ({
   existingCampaigns,
@@ -21,27 +11,14 @@ const CreateCampaign = ({
   setEditToggle,
   currentCampaign,
 }) => {
-  // const [campaign, setCampaign] = useState({ ...campaignModel });
   const [campaignName, setCampaignName] = useState(null);
   const [campaignType, setCampaignType] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  // const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  // const showModal = () => {
-  //   setOpen(true);
-  // };
+  const [form] = Form.useForm();
 
-  const handleCancel = () => {
-    // console.log("Clicked cancel button");
-    setCampaignName("");
-    setCampaignType("");
-    setStartDate("");
-    setEndDate("");
-    setEditToggle(false);
-    setOpen(false);
-  };
-
+  // Entered campaign info from user
   const newCampaign = {
     campaign_name: campaignName,
     campaign_type: Number(campaignType),
@@ -50,11 +27,13 @@ const CreateCampaign = ({
     campaign_status_id: 1,
   };
 
+  // Form submit via create or edit
   const handleSubmit = () => {
+    // Using validate function to check the entered data fits the schema
     if (validateNewCampaign(newCampaign).isValid) {
+      // Edit campaign logic
       if (editToggle) {
         setConfirmLoading(true);
-        // console.log("EDITED Campaign data:", newCampaign);
         const updatedCampaigns = [...existingCampaigns];
         updatedCampaigns[currentCampaign.key] = newCampaign;
         console.log(updatedCampaigns);
@@ -64,13 +43,15 @@ const CreateCampaign = ({
         setCampaignType("");
         setStartDate("");
         setEndDate("");
+        form.resetFields();
         return setTimeout(() => {
           setEditToggle(false);
-
+          message.success("Campaign updated successfully");
           setOpen(false);
           setConfirmLoading(false);
         }, 2000);
       } else {
+        // Create campaign logic
         setConfirmLoading(true);
         console.log("Campaign data:", newCampaign);
         const updatedCampaigns = [...existingCampaigns, newCampaign];
@@ -80,21 +61,32 @@ const CreateCampaign = ({
         setCampaignType("");
         setStartDate("");
         setEndDate("");
+        form.resetFields();
         setTimeout(() => {
+          message.success("Campaign created successfully");
           setOpen(false);
           setConfirmLoading(false);
         }, 2000);
       }
     } else {
-      alert(validateNewCampaign(newCampaign).message);
+      // Error message if validation fails
+      message.error(validateNewCampaign(newCampaign).message);
     }
+  };
+
+  // If user starts completing modal form and then backs out
+  const handleCancel = () => {
+    setCampaignName("");
+    setCampaignType("");
+    setStartDate("");
+    setEndDate("");
+    form.resetFields();
+    setEditToggle(false);
+    setOpen(false);
   };
 
   return (
     <>
-      {/* <Button type="primary" size="large" onClick={showModal}>
-        Create campaign
-      </Button> */}
       <Modal
         title={editToggle ? "Edit campaign" : "Create a new campaign"}
         open={open}
@@ -103,7 +95,7 @@ const CreateCampaign = ({
         onCancel={handleCancel}
         className="modal"
       >
-        <Form onFinish={handleSubmit}>
+        <Form onFinish={handleSubmit} form={form}>
           <Form.Item
             label="Campaign name:"
             name="Campaign name:"

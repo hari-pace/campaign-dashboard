@@ -9,9 +9,9 @@ const initialCampaigns = [
   {
     campaign_name: "Shopping cart campaign",
     campaign_type: 2,
-    campaign_start_time: "2024-02-25T22:00:00.000Z",
-    campaign_end_time: "2024-08-24T22:00:00.000Z",
-    campaign_status_id: 1,
+    campaign_start_time: "2023-09-25T22:00:00.000Z",
+    campaign_end_time: "2023-11-24T22:00:00.000Z",
+    campaign_status_id: 0,
   },
   {
     campaign_name: "New sign-up offer",
@@ -28,6 +28,7 @@ const initialCampaigns = [
     campaign_status_id: 1,
   },
   {
+    // High priority campaign!
     campaign_name: "Campaign to hire Hari",
     campaign_type: 1,
     campaign_start_time: "2024-02-23T22:00:00.000Z",

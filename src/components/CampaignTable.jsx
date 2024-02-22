@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   Space,
   Table,
-  Tag,
   Button,
   Input,
-  Radio,
   Select,
   DatePicker,
   message,
@@ -30,11 +28,6 @@ const CampaignTable = ({
   currentCampaign,
   setCurrentCampaign,
 }) => {
-  const [searchValueName, setSearchValueName] = useState("");
-  const [searchValueType, setSearchValueType] = useState(null);
-  const [searchStartDate, setSearchStartDate] = useState(null);
-  const [searchEndDate, setSearchEndDate] = useState(null);
-  const [statusActive, setStatusActive] = useState(true);
   const [sortOrder, setSortOrder] = useState(null);
   const [sortColumn, setSortColumn] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,45 +38,49 @@ const CampaignTable = ({
     endDate: null,
   });
 
-  const editButtonClick = (record) => {
-    setCurrentCampaign(record);
-    setEditToggle(true);
-    showModal();
+  // Filter form
+  // Filter form input fields
+  const handleNameChange = (e) => {
+    setFilters({ ...filters, name: e.target.value });
   };
 
-  const handleStatusToggle = (record) => {
-    setLoading(true);
-    const updatedCampaigns = existingCampaigns.map((campaign, i) => {
-      if (i === record.key) {
-        return {
-          ...campaign,
-          campaign_status_id: campaign.campaign_status_id === 1 ? 0 : 1,
-        };
-      }
-      setTimeout(() => {
-        setLoading(false);
-        message.success("Status updated successfully.");
-      }, 2000);
-      return campaign;
+  const handleTypeChange = (e) => {
+    setFilters({ ...filters, type: e });
+  };
+
+  const handleStartDateChange = (date) => {
+    setFilters({ ...filters, startDate: date });
+  };
+
+  const handleEndDateChange = (date) => {
+    setFilters({ ...filters, endDate: date });
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      name: "",
+      type: null,
+      startDate: null,
+      endDate: null,
     });
-
-    setStoredCampaigns(updatedCampaigns);
-    localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
   };
 
-  const handleColumnSort = (columnKey) => {
-    if (sortColumn === columnKey) {
-      // Toggle the sorting order if the same column is clicked again
-      setSortOrder((prevSortOrder) =>
-        prevSortOrder === "ascend" ? "descend" : "ascend"
-      );
-    } else {
-      // Set the new column key and initial sorting order
-      setSortColumn(columnKey);
-      setSortOrder("ascend");
-    }
-  };
+  // Filtering logic
+  const filteredCampaigns = existingCampaigns.filter((campaign) => {
+    const nameMatch = campaign.campaign_name
+      .toLowerCase()
+      .includes(filters.name.toLowerCase());
+    const typeMatch = !filters.type || campaign.campaign_type == filters.type;
+    const startDateMatch =
+      !filters.startDate ||
+      new Date(campaign.campaign_start_time) >= new Date(filters.startDate);
+    const endDateMatch =
+      !filters.endDate ||
+      new Date(campaign.campaign_end_time) <= new Date(filters.endDate);
+    return nameMatch && typeMatch && startDateMatch && endDateMatch;
+  });
 
+  // Table columns setup
   const columns = [
     {
       title: "Name",
@@ -179,62 +176,46 @@ const CampaignTable = ({
     },
   ];
 
-  // console.log(new Date("11.2.2024"));
-
-  // const filteredCampaignsByType = existingCampaigns?.filter(
-  //   (campaign) =>
-  //     campaign.campaign_type?.includes(searchValueName) ||
-  //     campaign.campaign_name?.includes(
-  //       searchValueName?.charAt(0).toUpperCase() + searchValueName?.slice(1)
-  //     ) ||
-  //     campaign.campaign_name?.includes(
-  //       searchValueName?.charAt(0).toLowerCase() + searchValueName?.slice(1)
-  //     )
-  // );
-
-  const handleNameChange = (e) => {
-    setFilters({ ...filters, name: e.target.value });
+  // Column sort logic
+  const handleColumnSort = (columnKey) => {
+    if (sortColumn === columnKey) {
+      setSortOrder((prevSortOrder) =>
+        prevSortOrder === "ascend" ? "descend" : "ascend"
+      );
+    } else {
+      setSortColumn(columnKey);
+      setSortOrder("ascend");
+    }
   };
 
-  const handleTypeChange = (e) => {
-    console.log(e);
-    setFilters({ ...filters, type: e });
+  // Actions column
+  // Edit button logic, reuses same modal as create campaign
+  const editButtonClick = (record) => {
+    setCurrentCampaign(record);
+    setEditToggle(true);
+    showModal();
   };
 
-  const handleStartDateChange = (date) => {
-    setFilters({ ...filters, startDate: date });
-  };
-
-  const handleEndDateChange = (date) => {
-    // console.log(date);
-    setFilters({ ...filters, endDate: date });
-  };
-
-  const clearFilters = () => {
-    setFilters({
-      name: "",
-      type: "",
-      startDate: null,
-      endDate: null,
+  // Activate / Delete button logic
+  const handleStatusToggle = (record) => {
+    setLoading(true);
+    const updatedCampaigns = existingCampaigns.map((campaign, i) => {
+      if (i === record.key) {
+        return {
+          ...campaign,
+          campaign_status_id: campaign.campaign_status_id === 1 ? 0 : 1,
+        };
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+      return campaign;
     });
+
+    message.success("Status updated successfully.");
+    setStoredCampaigns(updatedCampaigns);
+    localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
   };
-
-  const filteredCampaigns = existingCampaigns.filter((campaign) => {
-    const nameMatch = campaign.campaign_name
-      .toLowerCase()
-      .includes(filters.name.toLowerCase());
-
-    const typeMatch = !filters.type || campaign.campaign_type == filters.type;
-    console.log(typeMatch);
-
-    const startDateMatch =
-      !filters.startDate ||
-      new Date(campaign.campaign_start_time) >= new Date(filters.startDate);
-    const endDateMatch =
-      !filters.endDate ||
-      new Date(campaign.campaign_end_time) <= new Date(filters.endDate);
-    return nameMatch && typeMatch && startDateMatch && endDateMatch;
-  });
 
   return (
     <>
